@@ -1,0 +1,8 @@
+function PlotNewGraphs(lv,ma,fl,tv,h)
+tiledlayout(4,1)
+plot(tv,lv, '--r')
+hold on 
+plot(tv,ma, '--r')
+plot(tv,fl, '--r')
+plot(h,tv)
+hold off
