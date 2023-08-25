@@ -1,0 +1,28 @@
+% Use Euler's Method to predict the velocity and height of the ball at next
+% time step. For simulation for the Version 1 0N Thrust.
+function newstate = simulator(oldstate, thrust)
+% The input and output are a bundle of variables called state containing:
+% height (h), velocity (v), acceleration (a) timestep (dt) and current time (t).
+    
+% Make a new copy of all the variables  in state, ready for updating.
+newstate = oldstate;
+newstate.a = GetAcceleration(oldstate, thrust); %Use of function to get the acceleration and assigns this to the acceleration vector
+% 4.1 Use Euler's method to find the position at the next step
+newstate.h = oldstate.h + oldstate.dt * oldstate.v;
+ 
+% 4.2 Use Euler's method to find the velocity at the next step
+newstate.v = oldstate.v + oldstate.dt * newstate.a;
+    
+% 4.3 Increase the time by dt
+newstate.t = oldstate.t + oldstate.dt;
+
+%4.4 Calculate the new fuel mass
+    newstate.fuelmass = oldstate.fuelmass + (-oldstate.b * oldstate.dt * abs(thrust)); %Assigns a new value of Fuelmass using Eulers Method
+    if newstate.fuelmass>0 %Compares the value of the newfuel mass to zero
+        newstate.fuelmass = newstate.fuelmass; %If it is bigger then they are equal to one another to ensure there are no negative fuel mass
+    else
+        newstate.fuelmass = 0; %If it is not bigger then automatically assign the value to 0
+    end
+
+end
+  
