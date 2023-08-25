@@ -1,0 +1,5 @@
+% This function gives the thrust for the lander
+function Thrust = ThrustControl(state,v,tv)
+Error = tv - v; %This gives the error which varies with time
+Thrust = (state.gain * Error) + (state.fuelmass+state.fixedmass) *state.g; %This gives the final thrust
+end
