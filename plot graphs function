@@ -1,0 +1,47 @@
+%This function is responsible for plotting graphs of acceleration,
+%velocity, height and mass against time and labels the axis 
+function Plotgraphs(a,v,h,m,t,tv,state)
+
+tiledlayout(4,1)%This has 4 graphs on 4 rows and one column
+nexttile 
+plot(t,h,'r')
+xlabel('time(s)')
+ylabel('Height (m)')
+%This plots the height of the rocket against time
+nexttile 
+plot(t,v, 'b')
+hold on 
+plot(t, tv, '--r') %This plots the target velocity
+plot(t(end),v(end), 'rx') %This plots the red cross for the final veloccityw when the lander lands
+hold off
+xlabel('time (s)')
+ylabel('velocity (ms^-^1)')
+legend('Actual Velocity', 'Target Velocity') %This adds a legend so the user knows the difference between the two lines
+[LandVel] = v(end); %Gets the value and the position of the velocity at landing
+str4 = ['The Landing Velocity = ' num2str(LandVel) 'ms^-^1'];
+text(t(end), LandVel, str4);
+%This plots the velocity of the rocket against time
+nexttile 
+plot(t,a, 'g')
+xlabel('time(s)')
+ylabel('acceleration (ms^-^2)')
+[MaximumAcc, pos2] = max(a); %Gets the value and the position of the Maximum Acceleration
+str2 = ['The maximum Acceleration is = ' num2str(MaximumAcc) 'ms^-^2'];
+text(pos2*state.dt, MaximumAcc, str2)
+[MinimumAcc, pos3] = min(a); %Gets the value and the position of the Maximum Acceleration
+str3 = ['The minimum Acceleration is = ' num2str(MinimumAcc) 'ms^-^2'];
+text(pos3*state.dt, MinimumAcc, str3) %puts the text for minimum acceleration
+hold on 
+plot(pos2*state.dt, MaximumAcc, 'rx') %plots a red cross for the maximum acceleration
+plot(pos3*state.dt, MinimumAcc, 'rx') %plots red cross for minimum acceleration
+%This plots the acceleration of the rocket against time
+nexttile
+plot(t,m, 'Color', [0 0 0])
+xlabel('time (s)')
+ylabel('Fuel Mass (kg)')
+[RemFuelMass] = m(end); %Gets the value and the position of the minimum fuel mass
+str1 = ['The Fuel Remaining = ' num2str(RemFuelMass) 'kg'];
+text(t(end), RemFuelMass, str1); %gives text for fuel mass left
+sgtitle('Build 8:Piecewise Linear (PWL) target Velocity')
+end
+
