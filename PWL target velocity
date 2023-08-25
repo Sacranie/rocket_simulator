@@ -1,0 +1,66 @@
+% The lander simulator and controller
+% Version 9: PWL target Velocity
+function [LV, MA,FL]=LanderFunc(LineCoeffs)
+% 1. Initialise the values.
+% 
+%    1.1 Set the Model Parameters.
+state.fixedmass = 500;              % kg  Mass with no fuel
+state.fuelmass = 1500;              % kg  
+state.g = 9.81;                     % Acceleration due to gravity m s^-2
+state.v = -300;                     % Velocity m /s
+state.h = 3000;                     % Height m
+state.t = 0;                        % Time s
+state.dt = 0.1;                     % Step size s
+state.b = 0.001;                    % Burnrate in Kg per Newton of thrust per second
+state.dragcoefficient= 1/3;         % Drag Coefficent
+state.gain = 1000;                  %Gain
+state.targetvelocityintercept = 0;  %Target velocity intercept ms^-1
+state.slope = -0.1;                 %Change in target velocity against the current height s^-1
+%    1.2 Initialise vectors to store the data to plot.
+n=6000;             %set n to a number which is large 
+A = zeros(1,n);    %This is used to initialise the vector for Acceleration
+M = zeros(1,n);    %This is used to initialise the vector for Mass
+V = zeros(1,n);    %This is used to initialise the vector for velocity
+H = zeros(1,n);    %This is used to initialise the vector for height 
+T = zeros(1,n);    %This is used to initialise the vector for time
+TV = zeros(1,n); %This is used to intialise the vector for Target velocity
+k=0; %This sets the counter to 0
+
+
+% 2. Repeat for each time step while above the ground.
+while ((state.h>0) && k<n) %This ensures that the while loop will continue until the height becomes less than 0
+
+    %    3. Store the data to plot later.
+    k=k+1; %Adds one to the counter
+    V(k) = state.v; %Stores the velocity in a the velocity vector
+    H(k) = state.h; %Stores the height in the height vector
+    T(k) = state.t; %Stores the time in the time vector
+    M(k) = state.fuelmass; %Stores the mass in the mass vector
+    TV(k) = getPWL(LineCoeffs, H(k)); %Stores the target velcoity in the target velocity vector
+% 4. Get thrust from the controller
+%4.1 Set thrust to a constant value 
+thrust = -1;
+%4.2 Use the function thrustcontroltor output thrust for different times
+thrust = ThrustControl(state,V(k), TV(k));
+    %    5. Run the simulator to predict what will happen over the next time step.
+   
+     if state.fuelmass == 0 %Comapres the value of the state.fuelmass to 0
+        thrust=0; %If the statefuelmass is equal to zero then the thrust is zero
+     end
+      state = simulator(state, thrust); %Uses Eulers method to generate the new state values
+A(k) = state.a;
+    % 5. End of repeat.
+end
+%This gets rid of any unnecessary values
+V = V(1:k); 
+H = H(1:k); 
+T = T(1:k);
+A = A(1:k);
+M = M(1:k);
+TV = TV(1:k);
+
+% 6. Plot the data.
+Plotgraphs(A,V, H, M, T,TV,state)
+
+%7. Check Criteria 
+CheckCriteria(V,M,A,state)
