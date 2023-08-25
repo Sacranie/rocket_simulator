@@ -1,0 +1,24 @@
+%This function is respinsible for comparing the velocity remaining fuel
+%mass and the maximum acceleration to certain values and thereby checking
+%if they fit the criteria
+function CheckCriteria (v,m,a,state)
+LandVel = v(end);
+if LandVel < 0 && LandVel >= -2 %Compare the veloctity to see if it fits the criteria
+    disp(['Landing Velocity = ' num2str(LandVel) ', Criteria #1 passed'])
+else
+    disp(['Landing Velocity = ' num2str(LandVel) ', Criteria #1 failed'])
+end
+RemMass = m(end);
+if RemMass >0 %Compare the mass to see if it is larger than zero
+    disp(['Landing Mass ='  num2str(RemMass), ', Criteria #2 passed'])
+else 
+    disp(['Landing Mass =' num2str(RemMass), ', Criteria #2 Failed'])
+
+end
+MaximumAcc = max(a); %Compares the maximum acceleration to see if its less than a certain value
+if MaximumAcc < 6*state.g
+    disp(['MaximumAcceleration ='  num2str(MaximumAcc), ', Criteria #3 passed'])
+else 
+    disp(['MaximumAcceleration ='  num2str(MaximumAcc), ', Criteria #3 Failed'])
+end
+end
