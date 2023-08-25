@@ -1,0 +1,8 @@
+%Exercise 1(b) Function. However this is used for many Questions
+%Husayn Sacranie
+function NewArrow = translateShape(Shape, a, b)
+NewArrow = [(Shape(1,:) + a); (Shape(2,:)+b)];
+end
+%This is a function for 1(b) that gives a function to translate any shape
+%by a and b which a being horizontal translation and b being vertical
+%translation
